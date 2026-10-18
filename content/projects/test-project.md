@@ -1,6 +1,6 @@
 ---
 title: Test project
 description: Maisha ni mafupi gets up bro
-image: htt.com
-link: htt.actuaries9.netlfy.com
+image: /uploads/21867.jpg
+link: https://actuarial9.netlify.app/
 ---
