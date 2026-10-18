@@ -191,9 +191,100 @@ just<!DOCTYPE html>
           <article class="project-card" data-category="programming"><span class="project-number">PROJECT 06</span><h3>Statistical Analysis with R</h3><p>Import a dataset, calculate summary statistics, and create basic statistical charts using R.</p><div class="project-meta"><strong>Tools:</strong> R Software, Statistics</div><span class="project-status">Planned</span></article>
         </div>
       </div>
-    </section>
+  
+</section>
 
-    <section id="contact">
+<script>
+(async function loadCmsProjects() {
+  const grid = document.getElementById('projectsGrid');
+  const count = document.getElementById('projectCount');
+
+  try {
+    const api = 'https://api.github.com/repos/evaristi9/ACTUARIAL_9-PROJECT-/contents/content/projects?ref=main';
+    const response = await fetch(api);
+    if (!response.ok) throw new Error('GitHub projects unavailable');
+
+    const files = await response.json();
+    const markdownFiles = files.filter(file => file.name.endsWith('.md'));
+
+    for (const file of markdownFiles) {
+      const result = await fetch(file.download_url);
+      if (!result.ok) continue;
+
+      const text = await result.text();
+      const front = text.match(/^---\s*([\s\S]*?)\s*---/);
+      if (!front) continue;
+
+      function field(name) {
+        const match = front[1].match(new RegExp('^' + name + ':\\s*(.*)$', 'm'));
+        return match ? match[1].trim().replace(/^["']|["']$/g, '') : '';
+      }
+
+      const title = field('title');
+      const description = field('description');
+      const image = field('image');
+      const link = field('link');
+
+      if (!title) continue;
+
+      const duplicate = [...grid.querySelectorAll('h3')]
+        .some(h => h.textContent.trim().toLowerCase() === title.toLowerCase());
+      if (duplicate) continue;
+
+      const card = document.createElement('article');
+      card.className = 'project-card';
+      card.dataset.category = 'programming';
+
+      const number = document.createElement('span');
+      number.className = 'project-number';
+      number.textContent = 'CMS PROJECT';
+
+      const heading = document.createElement('h3');
+      heading.textContent = title;
+
+      const paragraph = document.createElement('p');
+      paragraph.textContent = description;
+
+      card.append(number, heading, paragraph);
+
+      if (image && image.startsWith('/uploads/')) {
+        const img = document.createElement('img');
+        img.src = image;
+        img.alt = title;
+        img.loading = 'lazy';
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        card.appendChild(img);
+      }
+
+      if (link && /^https?:\/\//i.test(link)) {
+        const a = document.createElement('a');
+        a.href = link;
+        a.textContent = 'View project ↗';
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        card.appendChild(a);
+      }
+
+      const status = document.createElement('span');
+      status.className = 'project-status';
+      status.textContent = 'Added via CMS';
+      card.appendChild(status);
+
+      grid.appendChild(card);
+    }
+
+    const visible = [...grid.querySelectorAll('.project-card')]
+      .filter(card => !card.hidden).length;
+    count.textContent = visible + (visible === 1 ? ' project' : ' projects');
+  } catch (error) {
+    console.error('Could not load CMS projects:', error);
+  }
+})();
+</script>
+
+<section id="contact">
+
       <div class="container">
         <div class="section-head"><p class="section-kicker">Say hello</p><h2 class="section-title">Let's <span class="highlight">connect</span></h2><p class="section-intro">For opportunities, project discussions, or professional connections, you can reach me through the details below.</p></div>
         <div class="contact-grid">
