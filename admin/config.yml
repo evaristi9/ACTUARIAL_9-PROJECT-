@@ -1,4 +1,5 @@
 
+
 backend:
   name: github
   repo: evaristi9/ACTUARIAL_9-PROJECT-
@@ -7,4 +8,22 @@ backend:
 media_folder: "uploads"
 public_folder: "/uploads"
 
-collections: []
+collections:
+  - name: "projects"
+    label: "Projects"
+    folder: "content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: "Project Title"
+        name: "title"
+        widget: "string"
+      - label: "Description"
+        name: "description"
+        widget: "text"
+      - label: "Project Image"
+        name: "image"
+        widget: "image"
+      - label: "Project Link"
+        name: "link"
+        widget: "string"
