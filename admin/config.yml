@@ -1,0 +1,10 @@
+
+backend:
+  name: github
+  repo: evaristi9/ACTUARIAL_9-PROJECT-
+  branch: main
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections: []
