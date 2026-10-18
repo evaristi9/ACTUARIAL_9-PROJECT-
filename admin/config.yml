@@ -1,4 +1,5 @@
-
+site_url: https://actuarial9.netlify.app
+display_url: https://actuarial9.netlify.app
 
 backend:
   name: github
