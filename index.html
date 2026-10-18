@@ -233,7 +233,7 @@ just<!DOCTYPE html>
 
       const card = document.createElement('article');
       card.className = 'project-card';
-      card.dataset.category = 'programming';
+      card.dataset.category = field('category') || 'programming';
 
       const number = document.createElement('span');
       number.className = 'project-number';
