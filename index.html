@@ -253,7 +253,7 @@ const link = readField('link');
 
       const card = document.createElement('article');
       card.className = 'project-card';
-      card.dataset.category = field('category') || 'programming';
+      card.dataset.category = readField('category') || 'programming';
 
       const number = document.createElement('span');
       number.className = 'project-number';
