@@ -216,26 +216,35 @@
       if (!front) continue;
 
       
+
 function readField(name) {
-  const frontMatter = front[1];
-  const match = frontMatter.match(
-    new RegExp('^' + name + ':\\s*(?:\\|\\s*)?([^\\n]*)', 'm')
+  const lines = front[1].split('\n');
+  const index = lines.findIndex(line =>
+    line.startsWith(name + ':')
   );
 
-  if (!match) return '';
+  if (index === -1) return '';
 
-  const inlineValue = match[1].trim().replace(/^["']|["']$/g, '');
-  if (inlineValue) return inlineValue;
+  const sameLine = lines[index]
+    .slice(name.length + 1)
+    .trim();
 
-  const lines = frontMatter.split('\n');
-  const start = lines.findIndex(line => line.match(new RegExp('^' + name + ':')));
-  if (start < 0) return '';
+  if (sameLine && sameLine !== '|') {
+    return sameLine.replace(/^["']|["']$/g, '');
+  }
 
   const values = [];
-  for (let i = start + 1; i < lines.length; i++) {
-    if (/^\S[^:]*:/.test(lines[i])) break;
-    if (lines[i].trim()) values.push(lines[i].trim());
+
+  for (let i = index + 1; i < lines.length; i++) {
+    if (/^[A-Za-z_][\w-]*:/.test(lines[i])) break;
+    if (lines[i].trim()) {
+      values.push(lines[i].trim());
+    }
   }
+
+  return values.join(' ');
+}
+
   return values.join(' ');
 }
 
