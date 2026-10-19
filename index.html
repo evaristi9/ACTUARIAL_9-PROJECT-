@@ -215,15 +215,35 @@
       const front = text.match(/^---\s*([\s\S]*?)\s*---/);
       if (!front) continue;
 
-      function field(name) {
-        const match = front[1].match(new RegExp('^' + name + ':\\s*(.*)$', 'm'));
-        return match ? match[1].trim().replace(/^["']|["']$/g, '') : '';
-      }
+      
+function readField(name) {
+  const frontMatter = front[1];
+  const match = frontMatter.match(
+    new RegExp('^' + name + ':\\s*(?:\\|\\s*)?([^\\n]*)', 'm')
+  );
 
-      const title = field('title');
-      const description = field('description');
-      const image = field('image');
-      const link = field('link');
+  if (!match) return '';
+
+  const inlineValue = match[1].trim().replace(/^["']|["']$/g, '');
+  if (inlineValue) return inlineValue;
+
+  const lines = frontMatter.split('\n');
+  const start = lines.findIndex(line => line.match(new RegExp('^' + name + ':')));
+  if (start < 0) return '';
+
+  const values = [];
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^\S[^:]*:/.test(lines[i])) break;
+    if (lines[i].trim()) values.push(lines[i].trim());
+  }
+  return values.join(' ');
+}
+
+const title = readField('title');
+const description = readField('description');
+const image = readField('image');
+const link = readField('link');
+
 
       if (!title) continue;
 
